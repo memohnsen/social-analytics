@@ -1,35 +1,32 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { TabBarContext } from '@/context/TabBarContext';
+import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { useState } from 'react';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+const TabsLayout = () => {
+  const [isTabBarHidden, setIsTabBarHidden] = useState(false);
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+    <TabBarContext value={{ setIsTabBarHidden }}>
+      <NativeTabs
+        tintColor={"#7f2ccb"}
+        hidden={isTabBarHidden}
+      >
+          <NativeTabs.Trigger name="(content)">
+              <NativeTabs.Trigger.Label hidden />
+              <NativeTabs.Trigger.Icon sf={{default: "house", selected: "house.fill"}} md="home" />
+          </NativeTabs.Trigger>
+          <NativeTabs.Trigger name="(analytics)">
+              <NativeTabs.Trigger.Label hidden />
+              <NativeTabs.Trigger.Icon sf={{default: "chart.bar", selected: "chart.bar.fill"}} md="bar_chart" />
+          </NativeTabs.Trigger>
+          <NativeTabs.Trigger name="(settings)">
+              <NativeTabs.Trigger.Icon sf={{default: "gearshape", selected: "gearshape.fill"}} md="settings" />
+              <NativeTabs.Trigger.Label hidden />
+          </NativeTabs.Trigger>
+      </NativeTabs>
+    </TabBarContext>
+  )
 }
+
+export default TabsLayout
