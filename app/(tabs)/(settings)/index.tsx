@@ -6,7 +6,7 @@ const Settings = () => {
     <ScrollView
         contentInsetAdjustmentBehavior='automatic'
         contentContainerClassName='px-4'
-        className='flex-1'
+        className='flex-1 bg-background'
       >
         <Text>Settings</Text>
       </ScrollView>

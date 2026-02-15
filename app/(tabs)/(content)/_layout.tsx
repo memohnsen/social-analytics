@@ -1,7 +1,9 @@
 import { Stack } from 'expo-router'
-import React from 'react'
+import { useColorScheme } from 'react-native'
 
 const ContentLayout = () => {
+  const colorScheme = useColorScheme()
+
   return (
     <Stack>
       <Stack.Screen
@@ -11,16 +13,15 @@ const ContentLayout = () => {
           title: 'Content',
           headerLargeTitleEnabled: true,
           headerTransparent: true,
+          headerTitleStyle: {
+            color: colorScheme === 'dark' ? '#fff' : '#000'
+          }
         }}
       /> 
       <Stack.Screen
         name="[id]"
         options={{
-          headerShown: true,
-          headerBackButtonDisplayMode: 'minimal',
-          title: 'Content',
-          headerLargeTitleEnabled: false,
-          headerTransparent: true,
+          headerShown: false,
         }}
       />  
       <Stack.Screen
@@ -28,9 +29,12 @@ const ContentLayout = () => {
         options={{
           headerShown: true,
           headerBackButtonDisplayMode: 'minimal',
-          title: 'Content',
+          title: 'Add Content Idea',
           headerLargeTitleEnabled: false,
           headerTransparent: true,
+          headerTitleStyle: {
+            color: colorScheme === 'dark' ? '#fff' : '#000'
+          }
         }}
       />     
     </Stack>

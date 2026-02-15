@@ -5,22 +5,26 @@
 @source './node_modules/heroui-native/lib';
 
 @layer theme {
-  @variant light {
-    --color-background: #ffffff;
-    --color-card-background: #f2f2f7;
-    --color-blush-pop: #ffa9e7;
-    --color-violet: #ff84e8;
-    --color-royal-violet: #7f2ccb;
-    --color-twilight-indigo: #414361;
-    --color-space-indigo: #2a2d43;
-  }
-  @variant dark {
-    --color-background: #000000;
-    --color-card-background: #1c1c1e;
-    --color-blush-pop: #ffa9e7;
-    --color-violet: #ff84e8;
-    --color-royal-violet: #7f2ccb;
-    --color-twilight-indigo: #414361;
-    --color-space-indigo: #2a2d43;
+  :root {
+    @variant light {
+      --color-background: #ffffff;
+      --color-card-background: #f2f2f7;
+      --color-primary-text: #000000;
+      --color-blush-pop: #ffa9e7;
+      --color-violet: #ff84e8;
+      --color-royal-violet: #7f2ccb;
+      --color-twilight-indigo: #414361;
+      --color-space-indigo: #2a2d43;
+    }
+    @variant dark {
+      --color-background: #000000;
+      --color-card-background: #1c1c1e;
+      --color-primary-text: #ffffff;
+      --color-blush-pop: #ffa9e7;
+      --color-violet: #ff84e8;
+      --color-royal-violet: #7f2ccb;
+      --color-twilight-indigo: #414361;
+      --color-space-indigo: #2a2d43;
+    }
   }
 }
