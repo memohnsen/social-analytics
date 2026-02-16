@@ -12,6 +12,7 @@ const ContentLayout = () => {
           headerShown: true,
           title: 'Content',
           headerLargeTitleEnabled: true,
+          headerBackButtonDisplayMode: 'minimal',
           headerTransparent: true,
           headerTitleStyle: {
             color: colorScheme === 'dark' ? '#fff' : '#000'
@@ -21,7 +22,14 @@ const ContentLayout = () => {
       <Stack.Screen
         name="[id]"
         options={{
-          headerShown: false,
+          headerShown: true,
+          headerTitle: "Update Content",
+          headerBackButtonDisplayMode: 'minimal',
+          headerLargeTitleEnabled: false,
+          headerTransparent: true,
+          headerTitleStyle: {
+            color: colorScheme === 'dark' ? '#fff' : '#000'
+          },
         }}
       />  
       <Stack.Screen

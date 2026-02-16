@@ -4,12 +4,12 @@ import { KeyboardTypeOptions } from 'react-native';
 
 
 interface TextInputProps {
-    title: string
-    placeholder: string
+    title: string | undefined
+    placeholder: string | undefined
     keyboardType: KeyboardTypeOptions
     largeHeight?: boolean
     autoCaptalize?: "none" | "sentences" | "words" | "characters" | undefined
-    value: string
+    value: string | null | undefined
     onChangeText: (value: string) => void
 }
 
