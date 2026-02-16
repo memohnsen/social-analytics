@@ -5,8 +5,11 @@ import { TabBarContext } from '@/context/TabBarContext';
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { updateAlert } from '@/utils/alert';
+import { formatDateToDatabase, formatStringToDate } from '@/utils/formatDate';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { useMutation, useQuery } from "convex/react";
 import { router, Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { Label } from 'heroui-native';
 import { use, useEffect, useState } from 'react';
 import { Platform, ScrollView } from 'react-native';
 
@@ -34,6 +37,7 @@ const ContentDetails = () => {
   const [comments, setComments] = useState("")
   const [shares, setShares] = useState("")
   const [collab, setCollab] = useState("")
+  const [date, setDate] = useState(new Date())
 
   // DATABASE FUNCTIONS
   const contentDetails = useQuery(api.contentKanban.getContentDetails, { id: id as Id<"contentKanban"> });
@@ -44,26 +48,32 @@ const ContentDetails = () => {
     let alertBody = ""
 
     try {
-      await updateContentDetails({
-        id: id as Id<"contentKanban">, 
-        title: title,
-        caption: caption,
-        script: script,
-        link: link,
-        collaboratedWith: collab.length !== 0 ? collab.split(",") : null,
-        followerCountAtPost: parseInt(followers),
-        viewsAtNextPost: parseInt(views),
-        likesAtNextPost: parseInt(likes),
-        commentsAtNextPost: parseInt(comments),
-        sharesAtNextPost: parseInt(shares),
-        status: statusSelected,
-        type: typeSelected,
-      })
+      if (title) {
+        await updateContentDetails({
+          id: id as Id<"contentKanban">, 
+          title: title,
+          caption: caption,
+          script: script,
+          link: link,
+          collaboratedWith: collab.length !== 0 ? collab.split(",") : null,
+          followerCountAtPost: parseInt(followers),
+          viewsAtNextPost: parseInt(views),
+          likesAtNextPost: parseInt(likes),
+          commentsAtNextPost: parseInt(comments),
+          sharesAtNextPost: parseInt(shares),
+          status: statusSelected,
+          type: typeSelected,
+          datePosted: formatDateToDatabase(date.toLocaleDateString())
+        })
 
-      alertTitle = "Success!"
-      alertBody = "Content Successfully Updated"
-      updateAlert(alertTitle, alertBody, () => router.dismissTo("/(content)"))
-
+        alertTitle = "Success!"
+        alertBody = "Content Successfully Updated"
+        updateAlert(alertTitle, alertBody, () => router.dismissTo("/(content)"))
+      } else {
+        alertTitle = "Error!"
+        alertBody = "Please fill out all required fields"
+        updateAlert(alertTitle, alertBody, () => {})
+      }
     } catch (error) {
       alertTitle = "Error"
       alertBody = `Content Failed to Update: ${error instanceof Error ? error.message : "Something went wrong"}`
@@ -85,6 +95,7 @@ const ContentDetails = () => {
       setComments(contentDetails.commentsAtNextPost ? contentDetails.commentsAtNextPost.toString() : "")
       setShares(contentDetails.sharesAtNextPost ? contentDetails.sharesAtNextPost.toString() : "")
       setCollab(contentDetails.collaboratedWith ? contentDetails.collaboratedWith.join(", ") : "")
+      setDate(contentDetails.datePosted ? formatStringToDate(contentDetails.datePosted) : new Date())
     }
   }, [contentDetails])
 
@@ -109,7 +120,7 @@ const ContentDetails = () => {
         contentContainerStyle={{ paddingBottom: 32 }}
       >
         <TextInput 
-          title="Title" 
+          title="Title*" 
           placeholder={contentDetails ? contentDetails.title : "Content"} 
           keyboardType='default' 
           autoCaptalize='words'
@@ -118,17 +129,25 @@ const ContentDetails = () => {
         />
 
         <ChipRow 
-          title="Post Status"
+          title="Post Status*"
           array={STATUS_OPTIONS} 
           setter={setStatusSelected} 
           itemState={statusSelected}        
         />
 
         <ChipRow 
-          title="Post Type"
+          title="Post Type*"
           array={TYPE_OPTIONS} 
           setter={setTypeSelected} 
           itemState={typeSelected}        
+        />
+
+        <Label className='text-primary-text text-lg pl-5 mb-2'>Post Date</Label>
+        <RNDateTimePicker 
+          mode="date"
+          value={date}
+          onChange={(event, selectedDate) => setDate(selectedDate ? selectedDate : new Date())}
+          style={{ marginLeft: 8, marginBottom: 16}}
         />
 
         <TextInput 

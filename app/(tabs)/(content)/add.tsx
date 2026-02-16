@@ -4,8 +4,11 @@ import { STATUS_OPTIONS, TYPE_OPTIONS } from '@/constants/content';
 import { TabBarContext } from '@/context/TabBarContext';
 import { api } from "@/convex/_generated/api";
 import { updateAlert } from '@/utils/alert';
+import { formatDateToDatabase } from '@/utils/formatDate';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { useMutation } from "convex/react";
 import { router, Stack, useFocusEffect } from 'expo-router';
+import { Label } from 'heroui-native';
 import { use, useState } from 'react';
 import { Platform, ScrollView } from 'react-native';
 
@@ -31,6 +34,7 @@ const AddContent = () => {
   const [comments, setComments] = useState("")
   const [shares, setShares] = useState("")
   const [collab, setCollab] = useState("")
+  const [date, setDate] = useState(new Date())
 
   // DATABASE FUNCTIONS
   const updateContentDetails = useMutation(api.contentKanban.insertContent);
@@ -54,6 +58,7 @@ const AddContent = () => {
           sharesAtNextPost: parseInt(shares),
           status: statusSelected,
           type: typeSelected,
+          datePosted: formatDateToDatabase(date.toLocaleDateString())
         })
 
         alertTitle = "Success!"
@@ -66,7 +71,7 @@ const AddContent = () => {
       }
     } catch (error) {
       alertTitle = "Error"
-      alertBody = `Content Failed to Update: ${error instanceof Error ? error.message : "Something went wrong"}`
+      alertBody = `Content Failed to Update: ${error instanceof Error ? error.message + date : "Something went wrong"}`
       updateAlert(alertTitle, alertBody, () => {})
     }
   }
@@ -112,6 +117,14 @@ const AddContent = () => {
           array={TYPE_OPTIONS} 
           setter={setTypeSelected} 
           itemState={typeSelected}        
+        />
+
+        <Label className='text-primary-text text-lg pl-5 mb-2'>Post Date</Label>
+        <RNDateTimePicker 
+          mode="date"
+          value={date}
+          onChange={(event, selectedDate) => setDate(selectedDate ? selectedDate : new Date())}
+          style={{ marginLeft: 8, marginBottom: 16}}
         />
 
         <TextInput 
