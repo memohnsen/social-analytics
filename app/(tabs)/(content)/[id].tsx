@@ -1,19 +1,39 @@
 import ChipRow from '@/components/content/ChipRow';
 import TextInput from '@/components/TextInput';
+import { STATUS_OPTIONS, TYPE_OPTIONS } from '@/constants/content';
 import { TabBarContext } from '@/context/TabBarContext';
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { updateAlert } from '@/utils/alert';
 import { useMutation, useQuery } from "convex/react";
 import { router, Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { use, useEffect, useState } from 'react';
-import { Alert, Platform, ScrollView, useColorScheme } from 'react-native';
-
-const STATUS_OPTIONS = ['posted', 'idea', 'scheduled', 'draft', 'ad', 'ready'] as const
-const TYPE_OPTIONS = ['reel', 'carousel', 'picture', 'trial reel', 'ad', 'voiceover'] as const
+import { Platform, ScrollView } from 'react-native';
 
 const ContentDetails = () => {
-  const colorScheme = useColorScheme()
   const { id } = useLocalSearchParams<{ id: string }>()
+    
+  // HIDE TAB BAR
+  const { setIsTabBarHidden } = use(TabBarContext);
+
+  useFocusEffect(() => {
+    setIsTabBarHidden(true);
+    return () => setIsTabBarHidden(false);
+  });
+
+  // FIELDS STATE
+  const [statusSelected, setStatusSelected] = useState<typeof STATUS_OPTIONS[number]>("idea")
+  const [typeSelected, setTypeSelected] = useState<typeof TYPE_OPTIONS[number]>("reel")
+  const [title, setTitle] = useState("")
+  const [caption, setCaption] = useState("")
+  const [script, setScript] = useState("")
+  const [link, setLink] = useState("")
+  const [followers, setFollowers] = useState("")
+  const [views, setViews] = useState("")
+  const [likes, setLikes] = useState("")
+  const [comments, setComments] = useState("")
+  const [shares, setShares] = useState("")
+  const [collab, setCollab] = useState("")
 
   // DATABASE FUNCTIONS
   const contentDetails = useQuery(api.contentKanban.getContentDetails, { id: id as Id<"contentKanban"> });
@@ -51,27 +71,6 @@ const ContentDetails = () => {
     }
   }
 
-  const updateAlert = (title: string, body: string, onPress: () => void) => {
-    Alert.alert(title, body, [{
-      text: "OK",
-      onPress: onPress
-    }])
-  }
-
-  // FIELDS STATE
-  const [statusSelected, setStatusSelected] = useState<typeof STATUS_OPTIONS[number]>("idea")
-  const [typeSelected, setTypeSelected] = useState<typeof TYPE_OPTIONS[number]>("reel")
-  const [title, setTitle] = useState("")
-  const [caption, setCaption] = useState("")
-  const [script, setScript] = useState("")
-  const [link, setLink] = useState("")
-  const [followers, setFollowers] = useState("")
-  const [views, setViews] = useState("")
-  const [likes, setLikes] = useState("")
-  const [comments, setComments] = useState("")
-  const [shares, setShares] = useState("")
-  const [collab, setCollab] = useState("")
-
   useEffect(() => {
     if (contentDetails) {
       setStatusSelected(contentDetails.status)
@@ -88,14 +87,6 @@ const ContentDetails = () => {
       setCollab(contentDetails.collaboratedWith ? contentDetails.collaboratedWith.join(", ") : "")
     }
   }, [contentDetails])
-  
-  // HIDE TAB BAR
-  const { setIsTabBarHidden } = use(TabBarContext);
-
-  useFocusEffect(() => {
-    setIsTabBarHidden(true);
-    return () => setIsTabBarHidden(false);
-  });
 
   return (
     <>

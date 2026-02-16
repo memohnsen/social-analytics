@@ -51,19 +51,19 @@ export const ContentCardSection = ({
         }
 
         {followerCountAtPost &&
-          <Card.Description>Followers At Post: {followerCountAtPost}</Card.Description>
+          <Card.Description>Followers At Post: {followerCountAtPost.toLocaleString()}</Card.Description>
         }
         {viewsAtNextPost &&
-          <Card.Description>24hr Views: {viewsAtNextPost}</Card.Description>
+          <Card.Description>24hr Views: {viewsAtNextPost.toLocaleString()}</Card.Description>
         }
         {likesAtNextPost &&
-          <Card.Description>24hr Likes: {likesAtNextPost}</Card.Description>
+          <Card.Description>24hr Likes: {likesAtNextPost.toLocaleString()}</Card.Description>
         }
         {commentsAtNextPost &&
-          <Card.Description>24hr Comments: {commentsAtNextPost}</Card.Description>
+          <Card.Description>24hr Comments: {commentsAtNextPost.toLocaleString()}</Card.Description>
         }
         {sharesAtNextPost &&
-          <Card.Description>24hr Shares: {sharesAtNextPost}</Card.Description>
+          <Card.Description>24hr Shares: {sharesAtNextPost.toLocaleString()}</Card.Description>
         }
       </Card>
     </TouchableOpacity>

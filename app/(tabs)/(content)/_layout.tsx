@@ -37,7 +37,7 @@ const ContentLayout = () => {
         options={{
           headerShown: true,
           headerBackButtonDisplayMode: 'minimal',
-          title: 'Add Content Idea',
+          title: 'Add Content',
           headerLargeTitleEnabled: false,
           headerTransparent: true,
           headerTitleStyle: {
