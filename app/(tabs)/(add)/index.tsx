@@ -1,26 +1,17 @@
 import ChipRow from '@/components/content/ChipRow';
 import TextInput from '@/components/TextInput';
 import { STATUS_OPTIONS, TYPE_OPTIONS } from '@/constants/content';
-import { TabBarContext } from '@/context/TabBarContext';
 import { api } from "@/convex/_generated/api";
 import { updateAlert } from '@/utils/alert';
 import { formatDateToDatabase } from '@/utils/formatDate';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { useMutation } from "convex/react";
-import { router, Stack, useFocusEffect } from 'expo-router';
+import { Stack } from 'expo-router';
 import { Label } from 'heroui-native';
-import { use, useState } from 'react';
+import { useState } from 'react';
 import { Platform, ScrollView } from 'react-native';
 
 const AddContent = () => {
-  // HIDE TAB BAR
-  const { setIsTabBarHidden } = use(TabBarContext);
-
-  useFocusEffect(() => {
-    setIsTabBarHidden(true);
-    return () => setIsTabBarHidden(false);
-  });
-
   // FIELDS STATE
   const [statusSelected, setStatusSelected] = useState<typeof STATUS_OPTIONS[number]>("idea")
   const [typeSelected, setTypeSelected] = useState<typeof TYPE_OPTIONS[number]>("reel")
@@ -63,7 +54,7 @@ const AddContent = () => {
 
         alertTitle = "Success!"
         alertBody = "Content Successfully Updated"
-        updateAlert(alertTitle, alertBody, () => router.dismissTo("/(content)"))
+        updateAlert(alertTitle, alertBody, () => {})
       } else {
         alertTitle = "Error!"
         alertBody = "Please fill out all required fields"

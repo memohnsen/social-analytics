@@ -21,7 +21,8 @@ export const ContentCardSection = ({
   likesAtNextPost,
   commentsAtNextPost,
   sharesAtNextPost,
-}: ContentCard) => {
+  filters
+}: ContentCard & { filters: string[] }) => {
 
   return (
     <TouchableOpacity onPress={() => router.push(`/${_id}`)}>
@@ -37,12 +38,12 @@ export const ContentCardSection = ({
               {type.capitalize()}
             </Chip>
           }
-          {datePosted &&
+          {datePosted && filters.includes("date") &&
             <Chip>{formatDate(datePosted)}</Chip>
           }
         </View>
 
-        {collaboratedWith &&
+        {collaboratedWith && filters.includes("collab") &&
           <View className='flex-row mb-2 gap-2'>
             {collaboratedWith.map((item) =>
               <Chip>{item}</Chip>
@@ -50,19 +51,19 @@ export const ContentCardSection = ({
           </View>
         }
 
-        {followerCountAtPost &&
+        {followerCountAtPost && filters.includes("followers") &&
           <Card.Description>Followers At Post: {followerCountAtPost.toLocaleString()}</Card.Description>
         }
-        {viewsAtNextPost &&
+        {viewsAtNextPost && filters.includes("views") &&
           <Card.Description>24hr Views: {viewsAtNextPost.toLocaleString()}</Card.Description>
         }
-        {likesAtNextPost &&
+        {likesAtNextPost && filters.includes("likes") &&
           <Card.Description>24hr Likes: {likesAtNextPost.toLocaleString()}</Card.Description>
         }
-        {commentsAtNextPost &&
+        {commentsAtNextPost && filters.includes("comments") &&
           <Card.Description>24hr Comments: {commentsAtNextPost.toLocaleString()}</Card.Description>
         }
-        {sharesAtNextPost &&
+        {sharesAtNextPost && filters.includes("shares") &&
           <Card.Description>24hr Shares: {sharesAtNextPost.toLocaleString()}</Card.Description>
         }
       </Card>

@@ -31,19 +31,6 @@ const ContentLayout = () => {
             color: colorScheme === 'dark' ? '#fff' : '#000'
           },
         }}
-      />  
-      <Stack.Screen
-        name="add"
-        options={{
-          headerShown: true,
-          headerBackButtonDisplayMode: 'minimal',
-          title: 'Add Content',
-          headerLargeTitleEnabled: false,
-          headerTransparent: true,
-          headerTitleStyle: {
-            color: colorScheme === 'dark' ? '#fff' : '#000'
-          }
-        }}
       />     
     </Stack>
   )

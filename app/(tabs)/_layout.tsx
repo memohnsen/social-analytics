@@ -24,6 +24,10 @@ const TabsLayout = () => {
               <NativeTabs.Trigger.Icon sf={{default: "gearshape", selected: "gearshape.fill"}} md="settings" />
               <NativeTabs.Trigger.Label hidden />
           </NativeTabs.Trigger>
+          <NativeTabs.Trigger name="(add)" role="search">
+              <NativeTabs.Trigger.Icon sf={{default: "plus", selected: "plus"}} md="add" />
+              <NativeTabs.Trigger.Label hidden />
+          </NativeTabs.Trigger>
       </NativeTabs>
     </TabBarContext>
   )
