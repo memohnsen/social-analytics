@@ -27,45 +27,51 @@ export const ContentCardSection = ({
   return (
     <TouchableOpacity onPress={() => router.push(`/${_id}`)}>
       <Card className='mb-4'>
-        <Card.Title key={_id} numberOfLines={2}>{title}</Card.Title>
+        <Card.Body>
+          <Card.Title key={_id} numberOfLines={2}>{title}</Card.Title>
 
-        <View className='flex-row my-2 gap-2'>
-          <Chip style={{ backgroundColor: getStatusColors(status)}}>
-            {status.capitalize()}
-          </Chip>
-          {type && 
-            <Chip style={{ backgroundColor: getTypeColors(type)}}>
-              {type.capitalize()}
+          <View className='flex-row my-2 gap-2'>
+            <Chip style={{ backgroundColor: getStatusColors(status)}}>
+              <Chip.Label>{status.capitalize()}</Chip.Label>
             </Chip>
-          }
-          {datePosted && filters.includes("date") &&
-            <Chip>{formatDate(datePosted)}</Chip>
-          }
-        </View>
-
-        {collaboratedWith && filters.includes("collab") &&
-          <View className='flex-row mb-2 gap-2'>
-            {collaboratedWith.map((item) =>
-              <Chip>{item}</Chip>
-            )}
+            {type ? (
+              <Chip style={{ backgroundColor: getTypeColors(type)}}>
+                <Chip.Label>{type.capitalize()}</Chip.Label>
+              </Chip>
+            ) : null}
+            {datePosted && filters.includes("date") ? (
+              <Chip>
+                <Chip.Label>{formatDate(datePosted)}</Chip.Label>
+              </Chip>
+            ) : null}
           </View>
-        }
 
-        {followerCountAtPost && filters.includes("followers") &&
-          <Card.Description>Followers At Post: {followerCountAtPost.toLocaleString()}</Card.Description>
-        }
-        {viewsAtNextPost && filters.includes("views") &&
-          <Card.Description>24hr Views: {viewsAtNextPost.toLocaleString()}</Card.Description>
-        }
-        {likesAtNextPost && filters.includes("likes") &&
-          <Card.Description>24hr Likes: {likesAtNextPost.toLocaleString()}</Card.Description>
-        }
-        {commentsAtNextPost && filters.includes("comments") &&
-          <Card.Description>24hr Comments: {commentsAtNextPost.toLocaleString()}</Card.Description>
-        }
-        {sharesAtNextPost && filters.includes("shares") &&
-          <Card.Description>24hr Shares: {sharesAtNextPost.toLocaleString()}</Card.Description>
-        }
+          {collaboratedWith?.length && filters.includes("collab") ? (
+            <View className='flex-row mb-2 gap-2'>
+              {collaboratedWith.map((item) =>
+                <Chip key={item}>
+                  <Chip.Label>{item}</Chip.Label>
+                </Chip>
+              )}
+            </View>
+          ) : null}
+
+          {filters.includes("followers") && followerCountAtPost != null ? (
+            <Card.Description>Followers At Post: {followerCountAtPost.toLocaleString()}</Card.Description>
+          ) : null}
+          {filters.includes("views") && viewsAtNextPost != null ? (
+            <Card.Description>24hr Views: {viewsAtNextPost.toLocaleString()}</Card.Description>
+          ) : null}
+          {filters.includes("likes") && likesAtNextPost != null ? (
+            <Card.Description>24hr Likes: {likesAtNextPost.toLocaleString()}</Card.Description>
+          ) : null}
+          {filters.includes("comments") && commentsAtNextPost != null ? (
+            <Card.Description>24hr Comments: {commentsAtNextPost.toLocaleString()}</Card.Description>
+          ) : null}
+          {filters.includes("shares") && sharesAtNextPost != null ? (
+            <Card.Description>24hr Shares: {sharesAtNextPost.toLocaleString()}</Card.Description>
+          ) : null}
+        </Card.Body>
       </Card>
     </TouchableOpacity>
   )

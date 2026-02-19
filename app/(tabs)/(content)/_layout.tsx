@@ -8,16 +8,6 @@ const ContentLayout = () => {
     <Stack>
       <Stack.Screen
         name="index"
-        options={{
-          headerShown: true,
-          title: 'Content',
-          headerLargeTitleEnabled: true,
-          headerBackButtonDisplayMode: 'minimal',
-          headerTransparent: true,
-          headerTitleStyle: {
-            color: colorScheme === 'dark' ? '#fff' : '#000'
-          }
-        }}
       /> 
       <Stack.Screen
         name="[id]"

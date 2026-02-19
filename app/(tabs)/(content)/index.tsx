@@ -1,14 +1,35 @@
+import { storage } from '@/app/_layout';
 import { ContentCardSection } from '@/components/content/ContentCardSection';
 import { api } from "@/convex/_generated/api";
 import { FlashList } from '@shopify/flash-list';
 import { useQuery } from "convex/react";
 import { Stack } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { ScrollView, Text, useColorScheme, View } from 'react-native';
+
+type ContentViewOptions = "kanban" | "list"
 
 const ContentPage = () => {
     const content = useQuery(api.contentKanban.getContentKanban);
+    const colorScheme = useColorScheme()
     const [selected, setSelected] = useState("A to Z")
-    const [shownFilters, setShownFilters] = useState<string[]>(["collab", "date"])
+    const [shownFilters, setShownFilters] = useState<string[]>(["collab"])
+    const [contentView, setContentView] = useState<ContentViewOptions>("kanban")
+
+    // SET MMKV TO STATE
+    useEffect(() => {
+        const storedFilters = storage.getString("filters")
+        if (storedFilters) {
+            const parsedFilters = JSON.parse(storedFilters)
+            setShownFilters(parsedFilters)
+        }
+    }, [])
+    
+    // UPDATE MMKV ON STATE CHANGE
+    useEffect(() => {
+        const serializedFilterArray = JSON.stringify(shownFilters)
+        storage.set("filters", serializedFilterArray)
+    }, [shownFilters])
 
     const sortedContent = useMemo(() => {
         if (!content) return []
@@ -57,8 +78,41 @@ const ContentPage = () => {
         }
     }
 
+    const kanbanIdeaColumn = useMemo(() => {
+        if (!content) return []
+        const items = [...sortedContent]
+        const filteredArray = items.filter(item => item.status.toLowerCase() === "idea")
+        return filteredArray
+    }, [sortedContent])
+
+    const kanbanPostedColumn = useMemo(() => {
+        if (!content) return []
+        const items = [...sortedContent]
+        const filteredArray = items.filter(item => item.status.toLowerCase() === "posted")
+        return filteredArray
+    }, [sortedContent])
+
+    const kanbanScheduledColumn = useMemo(() => {
+        if (!content) return []
+        const items = [...sortedContent]
+        const filteredArray = items.filter(item => item.status.toLowerCase() === "scheduled")
+        return filteredArray
+    }, [sortedContent])
+
     return (
         <>
+            <Stack.Screen
+                options={{
+                    headerShown: true,
+                    title: 'Content',
+                    headerLargeTitleEnabled: contentView === "list" ? true : false,
+                    headerBackButtonDisplayMode: 'minimal',
+                    headerTransparent: true,
+                    headerTitleStyle: {
+                        color: colorScheme === 'dark' ? '#fff' : '#000'
+                    }
+                }}
+            /> 
             <Stack.Toolbar placement='right'>
                 <Stack.Toolbar.Menu 
                     icon="line.3.horizontal.decrease" 
@@ -148,14 +202,67 @@ const ContentPage = () => {
                 </Stack.Toolbar.Menu>
             </Stack.Toolbar>
 
-            <FlashList 
-                data={sortedContent}  
-                className='bg-background px-4 pt-2' 
-                contentInsetAdjustmentBehavior='automatic'     
-                renderItem={({ item }) =>
-                    <ContentCardSection {...item} filters={shownFilters} />
-                } 
-            />
+            {contentView === "list" ? (
+                <FlashList 
+                    data={sortedContent}  
+                    className='bg-background px-4 pt-2' 
+                    contentInsetAdjustmentBehavior='automatic'     
+                    renderItem={({ item }) =>
+                        <ContentCardSection {...item} filters={shownFilters} />
+                    } 
+                    ListEmptyComponent={<View></View>}
+                />
+            ) : (
+                // page needs h scroll view
+                // each columnn needs individual v scroll
+                // flash list each column by status
+                // filtering by status - const filteredItemsByStatus = items.filter(item => item.status.toLowerCase() === "posted") 
+                // gesture handler to drag to diff columns
+
+                <ScrollView 
+                    horizontal 
+                    showsHorizontalScrollIndicator={false}
+                    className='bg-background px-4 pt-2 flex-row flex-1'
+                >
+                    <FlashList 
+                        data={kanbanIdeaColumn}  
+                        className='bg-background mr-6 pt-1 w-100' 
+                        contentInsetAdjustmentBehavior='automatic'     
+                        renderItem={({ item }) =>
+                            <ContentCardSection {...item} filters={shownFilters} />
+                        } 
+                        ListEmptyComponent={<View></View>}
+                        ListHeaderComponent={
+                            <Text className='text-primary-text text-2xl mb-2 font-bold'>Idea</Text>
+                        }
+                    />
+                    <FlashList 
+                        data={kanbanScheduledColumn}  
+                        className='bg-background mr-6 pt-1 w-100' 
+                        contentInsetAdjustmentBehavior='automatic'     
+                        renderItem={({ item }) =>
+                            <ContentCardSection {...item} filters={shownFilters} />
+                        } 
+                        ListEmptyComponent={<View></View>}
+                        ListHeaderComponent={
+                            <Text className='text-primary-text text-2xl mb-2 font-bold'>Scheduled</Text>
+                        }
+                    />
+                    <FlashList 
+                        data={kanbanPostedColumn}  
+                        className='bg-background mr-6 pt-1 w-100' 
+                        contentInsetAdjustmentBehavior='automatic'     
+                        renderItem={({ item }) =>
+                            <ContentCardSection {...item} filters={shownFilters} />
+                        } 
+                        ListEmptyComponent={<View></View>}
+                        ListHeaderComponent={
+                            <Text className='text-primary-text text-2xl mb-2 font-bold'>Posted</Text>
+                        }
+                    />
+                </ScrollView>
+            )}
+            
 
         </>
     )
